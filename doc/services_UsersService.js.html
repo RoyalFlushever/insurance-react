@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: services/UsersService.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: services/UsersService.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>var models = require('./../models');
+var sha1 = require('sha1');
+
+/**
+ * Get all User - populated by person info and role
+ * @returns {Promise.&lt;Array.&lt;Model>>}
+ */
+module.exports.find = function (query) {
+    return models.user.findAll({where: query});
+};
+
+/**
+ * Get all user
+ * @param query
+ * @returns {Promise.&lt;Array.&lt;Model>>}
+ */
+module.exports.getAll = function (query) {
+    var queryParams = {};
+    if (query['offset'])
+        queryParams.offset = parseInt(query['offset']);
+    if (query['limit'])
+        queryParams.limit = parseInt(query['limit']);
+    var sortable = ['deletedAt', 'businessName', 'address', 'zipCode', 'city'];
+    if (sortable.indexOf(query['sort']) > -1)
+        queryParams.order = [[query['sort'], query['order'] === 'DESC' ? 'DESC' : 'ASC']];
+    if (query['search'])
+        queryParams.where = {
+            businessName: {
+                $like: '%' + query['search'] + '%'
+            }
+        };
+    else if (query['id'])
+        queryParams.where = {
+            id: {
+                $eq: query['id']
+            }
+        }
+    if (query['showDisabled'])
+        queryParams.paranoid = false;
+
+    queryParams.include = [
+        {
+            model: models.role,
+            as: 'role',
+            include: [
+                {model: models.right, as: 'rightList'}
+            ]
+        }
+    ]
+    return models.user.findAll(queryParams);
+};
+/**
+ * Get all user
+ * @param query
+ * @returns {Promise.&lt;Array.&lt;Model>>}
+ */
+module.exports.findAccountManager = function () {
+    var queryParams = {
+        include: [
+            {
+                model: models.role,
+                as: 'role',
+                where : {
+                    'label' : "ACCOUNT_MANAGER"
+                }
+            }
+        ],
+
+    };
+    return models.user.findAll(queryParams);
+};
+
+function hydrate(dao, data) {
+    "use strict";
+    if (dao &amp;&amp; data) {
+        dao.genre = data.genre;
+        dao.roleId = data.roleId;
+        dao.lastName = data.lastName;
+        dao.firstName = data.firstName;
+        dao.address = data.address;
+        dao.address2 = data.address2;
+        dao.zipCode = data.zipCode;
+        dao.city = data.city;
+        dao.country = data.country;
+        dao.email = data.email;
+        dao.phone = data.phone;
+        dao.mobilePhone = data.mobilePhone;
+        dao.isGroupOvatio = data.isGroupOvatio;
+        dao.updatedAt = new Date()
+        return dao;
+    } else {
+
+    }
+}
+
+/**
+ * Create User
+ * @param user
+ * @param personInfoDao
+ * @param roleDao
+ * @returns {*}
+ */
+module.exports.create = function (user, personInfoDao, roleDao) {
+    return models.user.create({
+        genre: user.genre,
+        roleId: user.roleId,
+        lastName: user.lastName,
+        firstName: user.firstName,
+        address: user.address,
+        address2: user.address2,
+        zipCode: user.zipCode,
+        city: user.city,
+        email: user.email,
+        phone: user.phone,
+        mobilePhone: user.mobilePhone,
+        isGroupOvatio: user.isGroupOvatio,
+        password: user.password ? sha1(user.password) : null,
+        createdAt: new Date(),
+        updatedAt: new Date()
+    }).then(
+        function (user) {
+            if (personInfoDao) {
+                user.setPersonInfo(personInfoDao);
+            }
+            if (roleDao) {
+                user.setRole(roleDao);
+            }
+            return user;
+        })
+};
+
+module.exports.count = function (query) {
+    var queryParams = {};
+    return models.user.count(queryParams);
+};
+
+
+/**
+ * Get user Provider by Id
+ * @returns {Promise.&lt;Array.&lt;Model>>}
+ */
+module.exports.readById = function (id) {
+    return models.user.findAll({
+        where: {
+            id: id
+        },
+        include: [
+            {
+                model: models.role,
+                as: 'role',
+                include: [
+                    {model: models.right, as: 'rightList'}
+                ]
+            }
+        ]
+    })
+        .then(function (userDao) {
+            if (userDao &amp;&amp; userDao.length === 1) {
+                return userDao[0];
+            } else {
+                throw {
+                    status: 404,
+                    err: 'User not found ( id : ' + id + ')'
+                };
+            }
+        })
+        .catch(function (err) {
+            throw {
+                status: 500,
+                err: err
+            };
+        })
+};
+
+
+/**
+ * Edit User
+ * @param id
+ * @param businessProvider
+ * @returns {*}
+ */
+module.exports.editById = function (id, data) {
+    return this.readById(id).then(
+        function (userDao) {
+            if (userDao) {
+                hydrate(userDao, data);
+                return userDao.save();
+            }
+        }
+    )
+        .catch(function (err) {
+            throw {
+                status: 500,
+                err: err
+            };
+        });
+};
+
+/**
+ * Soft delete (mark as disabled) an Insurance Company
+ */
+module.exports.delete = function (id) {
+    return models.user.destroy({
+        where: {
+            id: id
+        }
+    });
+}
+
+
+
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-Manifestation%252520People%252520Service.html">Manifestation People Service</a></li><li><a href="module-Right%2520Service.html">Right Service</a></li><li><a href="module-Service%2520Business%2520provider.html">Service Business provider</a></li><li><a href="module-Service%2520Business%2520status%2520service.html">Service Business status service</a></li><li><a href="module-Service%2520Client.html">Service Client</a></li><li><a href="module-Service%2520Contact.html">Service Contact</a></li></ul><h3>Global</h3><ul><li><a href="global.html#create">create</a></li><li><a href="global.html#delete">delete</a></li><li><a href="global.html#deleteById">deleteById</a></li><li><a href="global.html#editById">editById</a></li><li><a href="global.html#find">find</a></li><li><a href="global.html#findAccountManager">findAccountManager</a></li><li><a href="global.html#findOrCreate">findOrCreate</a></li><li><a href="global.html#get">get</a></li><li><a href="global.html#getAll">getAll</a></li><li><a href="global.html#getById">getById</a></li><li><a href="global.html#getByLabel">getByLabel</a></li><li><a href="global.html#getRightListById">getRightListById</a></li><li><a href="global.html#readAll">readAll</a></li><li><a href="global.html#readById">readById</a></li><li><a href="global.html#update">update</a></li><li><a href="global.html#updateRoleAndRight">updateRoleAndRight</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.3</a> on Fri Aug 18 2017 15:25:26 GMT+0200 (Paris, Madrid (heure d’été))
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

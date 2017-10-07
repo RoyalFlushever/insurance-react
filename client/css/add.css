@@ -1,0 +1,265 @@
+.element-wrapper .element-header, legend span, legend:before{
+	z-index: 0;
+}
+
+.userIsDeleted{
+    background-color: #ff9a9a !important;
+
+}
+button{
+	cursor: pointer;
+}
+
+.custom_tab_ctrl li{
+	height: 50px;
+}
+
+.ae-side-menu{
+	flex: 0 0 250px;
+}
+.ae-list-w{
+	flex: 0 0 250px;
+}
+/*.list_create_btn{
+	font-size: 18px;
+	display: flex;
+	align-items: center;
+	height: 50px;}
+	.list_create_btn>a{
+		display: flex;
+		align-items: center;}
+	.list_create_btn i{
+		margin: 0 10px;}*/
+.list_create_btn{
+	padding: 15px 10px 0px;
+	display: flex;
+	align-items: center;
+	justify-content: space-around;}
+
+.company_lists{
+	padding: 20px}
+.company_lists>div{
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	font-size: 20px;}
+	.company_lists>div i{
+		color: #047bf8;
+		transition: all 0.2s ease;}
+	.company_lists>div span{
+		margin-left: 20px;
+		color: #3E4B5B;
+    font-weight: 400;	}
+.company_lists>div:hover i{
+	-webkit-transform: translateX(3px);
+  transform: translateX(3px);
+}
+
+.version_lists{
+	padding: 20px;}
+.version_lists>div{
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	font-size: 20px;}
+	.version_lists>div i{
+		padding: 5px;
+		color: #047bf8;
+		transition: all 0.2s ease;}
+	.version_lists>div span{
+		color: #3E4B5B;
+    font-weight: 400;	}
+.version_lists .version_timestamp{
+	font-size: 16px;
+}
+.version_lists>div:hover i{
+	-webkit-transform: translateX(3px);
+	transform: translateX(3px);
+}
+.version_lists .dropdown-toggle::after{
+	content: none;
+}
+
+.message-head i{
+	padding: 5px;
+	color: #047bf8;
+	transition: all 0.2s ease;
+}
+.message-head:hover i{
+	-webkit-transform: translateX(3px);
+	transform: translateX(3px);
+}
+
+.ae-content-w{
+	width: 100%;
+}
+.aec-full-message .add_lock{
+	padding: 25px;
+	display: flex;
+	justify-content: space-between;
+}
+.aec-full-message-w .message-content{
+	padding: 0px 25px 25px;
+}
+ 
+.template .ae-content{
+	padding: 15px;
+}
+
+.template .aec-full-message-w{
+	margin-bottom: 20px;
+}
+
+.pdfPreviewContainer{
+	width: 9in;
+	margin: auto;
+}
+
+/*///////////////////////////////////////////////////pdf css//////////////////////////////////////////////////*/
+.bigTitle{
+	color: #002950;
+	font-size: 18px;
+	font-weight: bold;
+	padding-left: 150px;
+}
+.content{
+	padding-left: 150px;
+	font-size: 12px;
+}
+.subTitle{
+	color: #002950;
+	font-size: 16px;
+	font-weight: bold;
+	padding-left: 130px;
+}
+body{
+	font-family: 'Lato', sans-serif;
+}
+.first_page{
+	height: 930px;
+}
+.logo img{
+	padding: 20px;
+	width: 200px;
+    height: auto;
+}
+.footer{
+
+}
+	.footer .title_div{
+		overflow: hidden;
+		font-size: 10px;
+		font-weight: 900;
+	}
+	.footer .title_left{
+		float: left;
+		width: 300px;
+		color: #6AC1E7;
+	}
+	.footer .title_center{
+		float: left;
+		color: #6AC1E7;
+	}
+	.footer .pages{
+		float: right;
+	}
+	.footer .sub_title{
+		color: #003366;
+		font-size: 10px;
+		font-weight: 900;
+	}
+	.footer .description{
+		font-weight: bold;
+		font-size: 8px;
+		line-height: 10px;
+	}
+.page_header_div{
+	overflow: hidden;
+	margin-bottom: 30px;
+}
+
+	.page_header_div .ticket{
+		background: #003366;
+		color: white;
+		float: left;
+		padding: 7px;
+		font-weight: 600;
+	}
+
+	.page_header_div .right{
+		float: right;
+	}
+	.page_header_div .black_title{
+		font-size: 30px;
+	    font-weight: 900;
+	    text-align: right;
+	}
+	.page_header_div .blue_title{
+		color: #2F6CAC;
+		font-size: 25px;
+	    font-weight: 800;
+	    text-align: right;
+	}
+.header_1{
+	overflow: hidden;
+}
+	.header_1 .ticket{
+		float: left;
+		width: 170px;
+		background: #2F6CAC;
+		color: white;
+		font-weight: 600;
+		padding: 7px;
+	}
+	.header_1 .box{
+		float: right;
+		width: 550px;
+		padding: 5px;
+		border: 2px solid #6390C0;
+	}
+.title_bold{
+	font-weight: 800;
+}
+.title_1{
+	font-size: 18px;
+}
+.title_2{
+	font-size: 14px;
+}
+.issue_date{
+	padding-left: 170px;
+}
+
+.header_2{
+	overflow: hidden;
+}
+	.header_2 .ticket{
+		float: left;
+		padding: 7px;
+		background: #6AC1E7;
+		color: white;
+		font-weight: 600;
+		width: 170px;
+	}
+	.header_2 .title{
+		float: left;
+		padding: 7px;
+		font-weight: 800;
+	}
+
+.indent_1{
+	padding-left: 170px;
+	height: 250px;
+}
+	.indent_1 .description{
+		margin-bottom: 5px;
+	}
+	.indent_1 .title{
+		font-size: 12px;
+		font-weight: 900;
+	}
+	.indent_1 .cover_content{
+		font-size: 12px;
+	}
+/*////////////////////////////////////////////////pdf css end//////////////////////////////////////////////////////*/

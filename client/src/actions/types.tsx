@@ -1,0 +1,13 @@
+export const LOGIN_USER = 'LOGIN_USER'
+export const LOGOUT_USER = 'LOGOUT_USER'
+
+export const LOAD_EXPERTS = 'LOAD_EXPERTS'
+export const LOAD_EXPERT = 'LOAD_EXPERT'
+
+export const SWITCH_LANGUAGE = 'SWITCH_LANGUAGE'
+
+export const GET_EXPERT_COUNT = 'GET_EXPERT_COUNT'
+
+export const LOAD_CONTACTS = 'LOAD_CONTACTS'
+export const LOAD_CONTACT = 'LOAD_CONTACT'
+

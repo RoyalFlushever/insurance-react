@@ -1,0 +1,19 @@
+{
+  "eventDate" : "Date de l’événement",
+  "eventEndDate" : "Fin de l’événement",
+  "artist" : "Artiste",
+  "numberInsured" : "Nombre de dates assurées",
+  "importDates" : "Importer une liste de dates",
+  "downloadDates" : "élécharger un modèle de liste de dates au format",
+  "clicToEdit" : "click to a case to edit",
+  "date" : "Date",
+  "country" : "Pays",
+  "zipCode" : "CP",
+  "place" : "Lieux",
+  "scene" : "Scene",
+  "damageBasis" : "Base indemnisation",
+  "amount" : "Montant",
+  "budget" : "Budget",
+  "category" : "Catégorie",
+  "type" : "Type"
+}

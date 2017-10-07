@@ -1,0 +1,124 @@
+#!/usr/bin/env node
+
+/**
+ * Module dependencies.
+ */
+
+var app = require('../app');
+var debug = require('debug')('ovatio:server');
+var http = require('http');
+var models = require('./../models');
+
+
+// for (let model of Object.keys(models)) {
+//   if(!models[model].name)
+//     continue;
+//
+//   console.log("\n\n----------------------------------\n",
+//       models[model].name,
+//       "\n----------------------------------");
+//
+//   if(models[model] && models[model].attributes){
+//     console.log("\nAttributes : ");
+//     for (let attr of Object.keys(models[model].attributes)) {
+//       console.log(models[model].name + '.' + attr);
+//     }
+//   }
+//   if(models[model] && models[model].attributes){
+//     console.log("\nAssociations : ");
+//     for (let assoc of Object.keys(models[model].associations)) {
+//       for (let accessor of Object.keys(models[model].associations[assoc].accessors)) {
+//         console.log(models[model].name + '.' + models[model].associations[assoc].accessors[accessor]+'()');
+//       }
+//     }
+//   }
+// }
+
+/**
+ * Get port from environment and store in Express.
+ */
+
+var port = normalizePort(process.env.PORT || '3000');
+app.set('port', port);
+
+/**
+ * Create HTTP server.
+ */
+
+var server = http.createServer(app);
+
+/**
+ * Listen on provided port, on all network interfaces.
+ */
+
+//models.sequelize.sync({force : true}).then(function() {
+  /**
+   * Listen on provided port, on all network interfaces.
+   */
+  server.listen(port, function() {
+    debug('Express server listening on port ' + server.address().port);
+  });
+  server.on('error', onError);
+  server.on('listening', onListening);
+//});
+
+
+/**
+ * Normalize a port into a number, string, or false.
+ */
+
+function normalizePort(val) {
+  var port = parseInt(val, 10);
+
+  if (isNaN(port)) {
+    // named pipe
+    return val;
+  }
+
+  if (port >= 0) {
+    // port number
+    return port;
+  }
+
+  return false;
+}
+
+/**
+ * Event listener for HTTP server "error" event.
+ */
+
+function onError(error) {
+  if (error.syscall !== 'listen') {
+    throw error;
+  }
+
+  var bind = typeof port === 'string'
+    ? 'Pipe ' + port
+    : 'Port ' + port;
+
+  // handle specific listen errors with friendly messages
+  switch (error.code) {
+    case 'EACCES':
+      console.error(bind + ' requires elevated privileges');
+      process.exit(1);
+      break;
+    case 'EADDRINUSE':
+      console.error(bind + ' is already in use');
+      process.exit(1);
+      break;
+    default:
+      throw error;
+  }
+}
+
+/**
+ * Event listener for HTTP server "listening" event.
+ */
+
+function onListening() {
+  var addr = server.address();
+  var bind = typeof addr === 'string'
+    ? 'pipe ' + addr
+    : 'port ' + addr.port;
+  debug('Listening on ' + bind);
+}

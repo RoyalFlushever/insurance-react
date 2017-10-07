@@ -1,0 +1,17 @@
+{
+    "userPageTitle": "Voir les utilisateurs",
+    "addUser": "Ajouter un utilisateur",
+    "firstName": "Prenom",
+    "lastName": "Non de famille",
+    "phone": "Telephone",
+    "createUserPageTitle": "Créer un utilisateur",
+    "genre": "Genre",
+    "role": "Role",
+    "address": "Adresse",
+    "address2": "Adresse complementaire",
+    "zipCode": "Code Postal",
+    "email": "Email",
+    "mobilePhone": "Telephone mobile",
+    "password": "Mot de passe"
+
+}

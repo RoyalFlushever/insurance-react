@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: services/ManifestationsTechnicianService.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: services/ManifestationsTechnicianService.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @module Manifestation People Service
+ */
+
+var models = require('./../models');
+
+
+module.exports.updateManifestationTechnician = function (manifestationDao, technicianUnavailabilityList) {
+    try {
+       return models.manifestation_technician.findAll({
+            where: {
+                manifestationId: manifestationDao.id
+            },
+            include: []
+        })
+            .then(function (manifestationTechnicianDaoList) {
+                var promises = [];
+                technicianUnavailabilityList.forEach(function (people) {
+                    if (!people.id) {
+                        promises.push(models.manifestation_technician.create({
+                            firstName: people.firstName|| null,
+                            manifestationId: manifestationDao.id || null,
+                            lastName: people.lastName || null,
+                            age: people.age || null,
+                            medicalExamination: people.medicalExamination || null,
+                            createdAt: new Date(),
+                            updatedAt: new Date()
+                        }))
+                    }
+                });
+                manifestationTechnicianDaoList.forEach(function (manifestationTechnicianDao) {
+                    var isInList = false;
+                    technicianUnavailabilityList.forEach(function (people) {
+                        if (people.id &amp;&amp; manifestationTechnicianDao.id == people.id) {
+                            isInList = true;
+                            manifestationTechnicianDao.firstName = people.firstName || null;
+                            manifestationTechnicianDao.lastName = people.lastName || null;
+                            manifestationTechnicianDao.age = people.age || null;
+                            manifestationTechnicianDao.medicalExamination = people.medicalExamination || null;
+                            manifestationTechnicianDao.updatedAt = new Date();
+                            promises.push(manifestationTechnicianDao.save())
+                        }
+                    });
+                    if (!isInList) {
+                        promises.push(models.manifestation_technician.destroy({
+                            where: {
+                                id: manifestationTechnicianDao.id
+                            }
+                        }));
+                    }
+                });
+                return Promise.all(promises).then(
+                    function (data) {
+                        return data;
+                    },
+                    function (err) {
+                        console.error(e);
+                    }
+                )
+            })
+    } catch (e) {
+        console.error(e);
+    }
+};
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-Manifestation%252520People%252520Service.html">Manifestation People Service</a></li><li><a href="module-Right%2520Service.html">Right Service</a></li><li><a href="module-Service%2520Business%2520provider.html">Service Business provider</a></li><li><a href="module-Service%2520Business%2520status%2520service.html">Service Business status service</a></li><li><a href="module-Service%2520Client.html">Service Client</a></li><li><a href="module-Service%2520Contact.html">Service Contact</a></li></ul><h3>Global</h3><ul><li><a href="global.html#create">create</a></li><li><a href="global.html#delete">delete</a></li><li><a href="global.html#deleteById">deleteById</a></li><li><a href="global.html#editById">editById</a></li><li><a href="global.html#find">find</a></li><li><a href="global.html#findAccountManager">findAccountManager</a></li><li><a href="global.html#findOrCreate">findOrCreate</a></li><li><a href="global.html#get">get</a></li><li><a href="global.html#getAll">getAll</a></li><li><a href="global.html#getById">getById</a></li><li><a href="global.html#getByLabel">getByLabel</a></li><li><a href="global.html#getRightListById">getRightListById</a></li><li><a href="global.html#readAll">readAll</a></li><li><a href="global.html#readById">readById</a></li><li><a href="global.html#update">update</a></li><li><a href="global.html#updateRoleAndRight">updateRoleAndRight</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.3</a> on Fri Aug 18 2017 15:25:26 GMT+0200 (Paris, Madrid (heure d’été))
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

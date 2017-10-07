@@ -1,0 +1,19 @@
+{
+    "eventDate": "Event date",
+    "eventEndDate": "Event end date",
+    "artist": "Artist",
+    "numberInsured": "Number of insured dates",
+    "importDates": "Import dates",
+    "downloadDates": "Download a modal of dates",
+    "clicToEdit": "click to a case to edit",
+    "date": "Date",
+    "country": "Country",
+    "zipCode": "Zip code",
+    "place": "Place",
+    "scene": "Scene",
+    "damageBasis": "Damage Basis",
+    "amount": "Amount",
+    "budget": "Budget",
+    "category": "Category",
+    "type": "Type"
+}

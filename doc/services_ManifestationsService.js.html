@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: services/ManifestationsService.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: services/ManifestationsService.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>var models = require('./../models');
+var sha1 = require('sha1');
+var ManifestationsPeopleService = require('./ManifestationsPeopleService')
+var ManifestationsTechnicianService = require('./ManifestationsTechnicianService')
+
+function hydrate(dao, data) {
+    "use strict";
+    if (dao &amp;&amp; data) {
+        dao.eventName = data.eventName || null;
+        dao.totalDeclaredBudget = data.totalDeclaredBudget || null;
+        dao.type = data.type || null;
+        dao.accountManagerId = data.accountManagerId || null;
+        dao.policyLanguage = data.policyLanguage || null;
+        dao.currency = data.currency || null;
+        dao.isBusinessProvider = data.isBusinessProvider || null;
+        dao.businessProviderId = data.businessProviderId || null;
+        dao.businessProviderFeesRate = data.businessProviderFeesRate || null;
+        dao.hasAdditionalInsuredParty = data.hasAdditionalInsuredParty || null;
+        dao.additionalInsuredPartyName = data.additionalInsuredPartyName || null;
+        dao.specialConditions = data.specialConditions || null;
+        dao.endOfGuaranteeRule = data.endOfGuaranteeRule || null;
+        dao.endOfGuaranteeRuleOnePercentDurationOfTheShow = data.endOfGuaranteeRuleOnePercentDurationOfTheShow || null;
+        dao.endOfGuaranteeRuleOneHasPlayed = data.endOfGuaranteeRuleOneHasPlayed || null;
+        dao.endOfGuaranteeRuleOneHasOption = data.endOfGuaranteeRuleOneHasOption || null;
+        dao.endOfGuaranteeRuleTwoActNumberIsOver = data.endOfGuaranteeRuleTwoActNumberIsOver || null;
+        dao.endOfGuaranteeRuleThreeTimeIsOver = data.endOfGuaranteeRuleThreeTimeIsOver || null;
+        dao.endOfGuaranteeRuleFourCondition = data.endOfGuaranteeRuleFourCondition || null;
+        dao.isCoInsurance = data.isCoInsurance || null;
+        dao.mainInsurerId = data.mainInsurerId || null;
+        dao.rateInsurer = data.rateInsurer || null;
+        dao.coInsurerId = data.coInsurerId || null;
+        dao.hasExpert = data.hasExpert || null;
+        dao.expertId = data.expertId || null;
+        dao.averageClause = data.averageClause || null;
+        dao.averagePremiumClause = data.averagePremiumClause || null;
+        dao.contractualIndemnityLimit = data.contractualIndemnityLimit || null;
+        dao.contractualIndemnityLimitRate = data.contractualIndemnityLimitRate || null;
+        dao.averageFinancialCommitment = data.averageFinancialCommitment || null;
+        dao.subscriptionDeadLine = data.subscriptionDeadLine || new Date();
+        dao.inceptionDate = data.inceptionDate || new Date();
+        dao.eventCategory = data.eventCategory || null;
+        dao.eventStartDate = data.eventStartDate || new Date();
+        dao.eventEndDate = data.eventEndDate || null;
+        dao.artist = data.artist || null;
+        dao.dateType = data.dateType || null;
+        dao.numberOfInsuredDates = data.numberOfInsuredDates || null;
+        dao.isPersonUnavailability = data.isPersonUnavailability || null;
+        dao.numberPersonInsured = data.numberPersonInsured || null;
+        dao.numberTechnicianInsured = data.numberTechnicianInsured || null;
+        dao.isTechnicianInsuredNamed = data.isTechnicianInsuredNamed || null;
+        dao.totalBudget = data.totalBudget || null;
+        dao.unavailabilityRate = data.unavailabilityRate || null;
+        dao.hasSpecialDispositionExtension = data.hasSpecialDispositionExtension || null;
+        dao.specialDisposition = data.specialDisposition || null;
+        dao.hasUnavailabiliytExtension = data.hasUnavailabiliytExtension || null;
+        dao.isFeeDeducted = data.isFeeDeducted || null;
+        dao.artisteFee = data.artisteFee || null;
+        dao.hasBadWeatherExtension = data.hasBadWeatherExtension || null;
+        dao.badWeatherRate = data.badWeatherRate || null;
+        dao.percentBudgetToBadWeather = data.percentBudgetToBadWeather || null;
+        dao.hasCrowShortageExtension = data.hasCrowShortageExtension || null;
+        dao.franchise = data.franchise || null;
+        dao.hasBombingExtension = data.hasBombingExtension || null;
+        dao.bombingRate = data.bombingRate || null;
+        dao.bombingNumberOfDay = data.bombingNumberOfDay || null;
+        dao.bombingNumberOfKilometre = data.bombingNumberOfKilometre || null;
+        dao.bombingHasOptionThreat = data.bombingHasOptionThreat || null;
+        dao.bombingHasOptionRecommendation = data.bombingHasOptionRecommendation || null;
+        dao.hasMoralReasonExtension = data.hasMoralReasonExtension || null;
+        dao.hasExpertFeeExtension = data.hasExpertFeeExtension || null;
+        dao.expertWarrantyAmount = data.expertWarrantyAmount || null;
+        dao.expertFranchise = data.expertFranchise || null;
+        dao.BNSType = data.BNSType || null;
+        dao.applicableFranchise = data.applicableFranchise || null;
+        dao.comprehensiveInsuranceRate = data.comprehensiveInsuranceRate || null;
+        dao.BNS = data.BNS || null;
+        dao.franchiseAmount = data.franchiseAmount || null;
+        dao.exposedBudgetUnavailability = data.exposedBudgetUnavailability || null;
+        dao.exposedBudgetBadWeather = data.exposedBudgetBadWeather || null;
+        dao.exposedBudgetBombing = data.exposedBudgetBombing || null;
+        dao.excludingTaxRateUnavailability = data.excludingTaxRateUnavailability || null;
+        dao.excludingTaxRateBadWeather = data.excludingTaxRateBadWeather || null;
+        dao.excludingTaxRateBombing = data.excludingTaxRateBombing || null;
+        dao.ovationCommission = data.ovationCommission || null;
+        dao.ovationBSNCommission = data.ovationBSNCommission || null;
+        dao.isTechnicianIndispensable = data.isTechnicianIndispensable || null;
+        dao.taxRate = data.taxRate || null;
+        dao.updatedAt = new Date();
+        return dao;
+    } else {
+
+    }
+}
+
+/**
+ * Get all Business Provider
+ *  @param query {json} - json of the query (offset, limit, order, where)
+ * @returns {Promise.&lt;Array.&lt;Manifestation>>}
+ */
+module.exports.readAll = function (query) {
+    console.log('query: ', query);
+    var queryParams = {};
+    if (query['offset'])
+        queryParams.offset = parseInt(query['offset']);
+    if (query['limit'])
+        queryParams.limit = parseInt(query['limit']);
+    var sortable = ['deletedAt', 'businessName', 'address', 'zipCode', 'city'];
+    if (sortable.indexOf(query['sort']) > -1)
+        queryParams.order = [[query['sort'], query['order'] === 'DESC' ? 'DESC' : 'ASC']];
+    if (query['search'])
+        queryParams.where = {
+            eventName: {
+                $like: '%' + query['search'] + '%'
+            }
+        };
+
+    return models.manifestation.findAll(queryParams);
+
+};
+
+module.exports.count = function (query) {
+    var queryParams = {};
+    if (query['showDisabled'])
+        queryParams.paranoid = false;
+    return models.manifestation.count(queryParams);
+};
+
+/**
+ * Get Business Provider by Id
+ * @param id {string} - id of the manifestation
+ * @returns {Promise.&lt;Array.&lt;Manifestation>>}
+ */
+module.exports.readById = function (id) {
+    return models.manifestation.findAll({
+        where: {
+            id: id
+        },
+        include: [
+            { model : models.manifestation_person ,  as: 'personUnavailabilityList'},
+            { model : models.manifestation_technician ,  as: 'technicianUnavailabilityList'}
+        ]
+    })
+        .then(function (businessProviderDaoList) {
+            if (businessProviderDaoList &amp;&amp; businessProviderDaoList.length === 1) {
+                return businessProviderDaoList[0];
+            } else {
+                throw {
+                    status: 404,
+                    err: 'User not found ( id : ' + id + ')'
+                };
+            }
+        })
+        .catch(function (err) {
+            throw {
+                status: 500,
+                err: err
+            };
+        })
+};
+
+/**
+ * Create Business Provider
+ * @param businessProvider
+ * @returns {*}
+ */
+module.exports.create = function (manifestation) {
+    return models.manifestation.create({
+        eventName: manifestation.eventName || null,
+        totalDeclaredBudget: manifestation.totalDeclaredBudget || null,
+        type: manifestation.type || null,
+        accountManagerId: manifestation.accountManagerId || null,
+        policyLanguage: manifestation.policyLanguage || null,
+        currency: manifestation.currency || null,
+        isBusinessProvider: manifestation.isBusinessProvider || null,
+        businessProviderId: manifestation.businessProviderId || null,
+        businessProviderFeesRate: manifestation.businessProviderFeesRate || null,
+        hasAdditionalInsuredParty: manifestation.hasAdditionalInsuredParty || null,
+        additionalInsuredPartyName: manifestation.additionalInsuredPartyName || null,
+        specialConditions: manifestation.specialConditions || null,
+        endOfGuaranteeRule: manifestation.endOfGuaranteeRule || null,
+        endOfGuaranteeRuleOnePercentDurationOfTheShow: manifestation.endOfGuaranteeRuleOnePercentDurationOfTheShow || null,
+        endOfGuaranteeRuleOneHasPlayed: manifestation.endOfGuaranteeRuleOneHasPlayed || null,
+        endOfGuaranteeRuleOneHasOption: manifestation.endOfGuaranteeRuleOneHasOption || null,
+        endOfGuaranteeRuleTwoActNumberIsOver: manifestation.endOfGuaranteeRuleTwoActNumberIsOver || null,
+        endOfGuaranteeRuleThreeTimeIsOver: manifestation.endOfGuaranteeRuleThreeTimeIsOver || null,
+        endOfGuaranteeRuleFourCondition: manifestation.endOfGuaranteeRuleFourCondition || null,
+        isCoInsurance: manifestation.isCoInsurance || null,
+        mainInsurerId: manifestation.mainInsurerId || null,
+        rateInsurer: manifestation.rateInsurer || null,
+        coInsurerId: manifestation.coInsurerId || null,
+        hasExpert: manifestation.hasExpert || null,
+        expertId: manifestation.expertId || null,
+        averageClause: manifestation.averageClause || null,
+        averagePremiumClause: manifestation.averagePremiumClause || null,
+        contractualIndemnityLimit: manifestation.contractualIndemnityLimit || null,
+        contractualIndemnityLimitRate: manifestation.contractualIndemnityLimitRate || null,
+        averageFinancialCommitment: manifestation.averageFinancialCommitment || null,
+        subscriptionDeadLine: manifestation.subscriptionDeadLine || new Date(),
+        hasUnavailabiliytExtension: manifestation.hasUnavailabiliytExtension || null,
+        inceptionDate: manifestation.inceptionDate || new Date(),
+        eventCategory: manifestation.eventCategory || null,
+        eventStartDate: manifestation.eventStartDate || new Date(),
+        eventEndDate: manifestation.eventEndDate || null,
+        artist: manifestation.artist || null,
+        dateType: manifestation.dateType || null,
+        numberOfInsuredDates: manifestation.numberOfInsuredDates || null,
+        numberPersonInsured: manifestation.numberPersonInsured || null,
+        numberTechnicianInsured: manifestation.numberTechnicianInsured || null,
+        isTechnicianInsuredNamed: manifestation.isTechnicianInsuredNamed || null,
+        totalBudget: manifestation.totalBudget || null,
+        unavailabilityRate: manifestation.unavailabilityRate || null,
+        hasSpecialDispositionExtension: manifestation.hasSpecialDispositionExtension || null,
+        specialDisposition: manifestation.specialDisposition || null,
+        isFeeDeducted: manifestation.isFeeDeducted || null,
+        artisteFee: manifestation.artisteFee || null,
+        hasBadWeatherExtension: manifestation.hasBadWeatherExtension || null,
+        badWeatherRate: manifestation.badWeatherRate || null,
+        percentBudgetToBadWeather: manifestation.percentBudgetToBadWeather || null,
+        hasCrowShortageExtension: manifestation.hasCrowShortageExtension || null,
+        franchise: manifestation.franchise || null,
+        hasBombingExtension: manifestation.hasBombingExtension || null,
+        bombingRate: manifestation.bombingRate || null,
+        bombingNumberOfDay: manifestation.bombingNumberOfDay || null,
+        bombingNumberOfKilometre: manifestation.bombingNumberOfKilometre || null,
+        bombingHasOptionThreat: manifestation.bombingHasOptionThreat || null,
+        bombingHasOptionRecommendation: manifestation.bombingHasOptionRecommendation || null,
+        hasMoralReasonExtension: manifestation.hasMoralReasonExtension || null,
+        hasExpertFeeExtension: manifestation.hasExpertFeeExtension || null,
+        expertWarrantyAmount: manifestation.expertWarrantyAmount || null,
+        expertFranchise: manifestation.expertFranchise || null,
+        BNSType: manifestation.BNSType || null,
+        applicableFranchise: manifestation.applicableFranchise || null,
+        comprehensiveInsuranceRate: manifestation.comprehensiveInsuranceRate || null,
+        BNS: manifestation.BNS || null,
+        franchiseAmount: manifestation.franchiseAmount || null,
+        exposedBudgetUnavailability: manifestation.exposedBudgetUnavailability || null,
+        exposedBudgetBadWeather: manifestation.exposedBudgetBadWeather || null,
+        exposedBudgetBombing: manifestation.exposedBudgetBombing || null,
+        excludingTaxRateUnavailability: manifestation.excludingTaxRateUnavailability || null,
+        excludingTaxRateBadWeather: manifestation.excludingTaxRateBadWeather || null,
+        excludingTaxRateBombing: manifestation.excludingTaxRateBombing || null,
+        ovationCommission: manifestation.ovationCommission || null,
+        ovationBSNCommission: manifestation.ovationBSNCommission || null,
+        taxRate: manifestation.taxRate || null,
+        isPersonUnavailability: manifestation.isPersonUnavailability || null,
+        isTechnicianIndispensable: manifestation.isTechnicianIndispensable || null,
+        createdAt: new Date(),
+        updatedAt: new Date()
+
+    })
+        .then(
+            (manifestationDao) => {
+                return ManifestationsPeopleService.updateManifestationPeople(manifestationDao, manifestation.personUnavailabilityList)
+                    .then(
+                        (manifestationPersonDaoList) => {
+                            return manifestationDao;
+                        }
+                    )
+            }
+        )
+        .catch((err)=> {
+            console.error(err)
+        });
+};
+
+/**
+ * Create Manifestation
+ * @param id {string} - id of the manifestation
+ * @param manifestation {json} - data of the manifestation
+ * @returns {*}
+ */
+module.exports.editById = function (id, manifestation) {
+    return this.readById(id).then(
+        function (manifestationDao) {
+            if (manifestationDao) {
+                hydrate(manifestationDao, manifestation);
+                return manifestationDao.save().then(
+                    (manifestationDao) => {
+                        return Promise.all([
+                            ManifestationsPeopleService.updateManifestationPeople(manifestationDao, manifestation.personUnavailabilityList),
+                            ManifestationsTechnicianService.updateManifestationTechnician(manifestationDao, manifestation.technicianUnavailabilityList)
+                            ])
+                            .then(
+                                (data) => {
+                                    return manifestationDao;
+                                }
+                            )
+                    }
+                )
+            }
+        }
+    )
+        .catch(function (err) {
+            throw {
+                status: 500,
+                err: err
+            };
+        });
+};
+
+
+/**
+ * Delete manifestation
+ * @param id {string} - id of the manifestation
+ * @returns {*}
+ */
+module.exports.deleteById = function (id) {
+    return models.manifestation.destroy({
+        where: {
+            id: id
+        }
+    });
+};
+
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-Manifestation%252520People%252520Service.html">Manifestation People Service</a></li><li><a href="module-Right%2520Service.html">Right Service</a></li><li><a href="module-Service%2520Business%2520provider.html">Service Business provider</a></li><li><a href="module-Service%2520Business%2520status%2520service.html">Service Business status service</a></li><li><a href="module-Service%2520Client.html">Service Client</a></li><li><a href="module-Service%2520Contact.html">Service Contact</a></li></ul><h3>Global</h3><ul><li><a href="global.html#create">create</a></li><li><a href="global.html#delete">delete</a></li><li><a href="global.html#deleteById">deleteById</a></li><li><a href="global.html#editById">editById</a></li><li><a href="global.html#find">find</a></li><li><a href="global.html#findAccountManager">findAccountManager</a></li><li><a href="global.html#findOrCreate">findOrCreate</a></li><li><a href="global.html#get">get</a></li><li><a href="global.html#getAll">getAll</a></li><li><a href="global.html#getById">getById</a></li><li><a href="global.html#getByLabel">getByLabel</a></li><li><a href="global.html#getRightListById">getRightListById</a></li><li><a href="global.html#readAll">readAll</a></li><li><a href="global.html#readById">readById</a></li><li><a href="global.html#update">update</a></li><li><a href="global.html#updateRoleAndRight">updateRoleAndRight</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.3</a> on Fri Aug 18 2017 15:25:26 GMT+0200 (Paris, Madrid (heure d’été))
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
