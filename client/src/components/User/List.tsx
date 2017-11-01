@@ -4,12 +4,15 @@ import ReactPaginate from 'react-paginate';
 import { translate, Interpolate, Trans } from 'react-i18next';
 import i18n from '../../i18n';
 import { Link } from 'react-router'
+import {RolesService} from '../../services/role';
 
 export interface UserListProps { }
 export interface UserListState {
     searchValue: string,
     filterValue: string,
+    roleValue: string,
     rowCount: number,
+    totalRowCount: number,
     offset: number,
     sortParams: any,
     pageCount: number,
@@ -20,6 +23,7 @@ export interface UserListState {
 export class UserList extends React.Component<UserListProps, UserListState> {
     public columns: Array<string>;
     public state: any;
+    public roleList: any;
 
     constructor(props: UserListProps) {
         super(props);
@@ -28,13 +32,14 @@ export class UserList extends React.Component<UserListProps, UserListState> {
                         'firstName',
                         'lastName',
                         'email',
-                        'phone',
-                        'role'
+                        'phone'
                         ];
         this.state = {
             searchValue: '',
             filterValue: '',
+            roleValue:'',
             rowCount: 10,
+            totalRowCount: 10,
             offset: 0,
             sortParams: {
                 column: 'lastName',
@@ -43,14 +48,25 @@ export class UserList extends React.Component<UserListProps, UserListState> {
             pageCount: 0,
             userList: []
         };
+
+        this.roleList = [];
+        RolesService.find().then(
+            resp => {
+                this.roleList = resp.data;
+                this.forceUpdate();
+            }
+        );
+
         this.search = this.search.bind(this);
         this.filter = this.filter.bind(this);
+        this.filterRole = this.filterRole.bind(this);
         this.handleRowCount = this.handleRowCount.bind(this);
         this.setSortParams = this.setSortParams.bind(this);
         this.editUser = this.editUser.bind(this);
         this.deleteUser= this.deleteUser.bind(this);
         this.loadDataFromServer = this.loadDataFromServer.bind(this);
         this.handlePageChange = this.handlePageChange.bind(this);
+        
     }
 
     editUser(id: number, event: any) {
@@ -86,6 +102,14 @@ export class UserList extends React.Component<UserListProps, UserListState> {
         });
     }
 
+    filterRole(event: any) {
+        event.preventDefault();
+        this.setState({roleValue: event.target.value}, () => {
+            console.log(this.state.roleValue);
+            this.loadDataFromServer();
+        });
+    }
+
     handlePageChange(event: any) {
         let rowCount = this.state.rowCount
         this.setState({
@@ -93,11 +117,11 @@ export class UserList extends React.Component<UserListProps, UserListState> {
         }, () => {
             this.loadDataFromServer();
         })
-    }
+    } 
 
 
     setSortParams(sortColumn: string, event: any) {
-        if (['firstName', 'lastName', 'email', 'phone','role'].indexOf(sortColumn) > -1) {
+        if (['firstName', 'lastName', 'email', 'phone'].indexOf(sortColumn) > -1) {
             let orderASC = sortColumn === this.state.sortParams.column ? !this.state.sortParams.orderASC : true
             this.setState({
                 sortParams: {
@@ -112,15 +136,17 @@ export class UserList extends React.Component<UserListProps, UserListState> {
 
     loadDataFromServer() {
         let params: any = {
-            sort: this.state.sortParams.search,
+            sort: this.state.sortParams.column,
             order: this.state.sortParams.orderASC ? 'ASC' : 'DESC',
             search: this.state.searchValue,
             filter: this.state.filterValue,
+            roleValue: this.state.roleValue,
             offset: this.state.offset,
             limit: this.state.rowCount
         };
-        axios.get('/count', {params: {}}).then((resp) => {
+        axios.get('/count', {params: {params}}).then((resp) => {
             let totalRowCount = resp.data.count
+            
             axios.get('', {params: params}).then((resp) => {
                 let rowCount = this.state.rowCount
                 this.setState({
@@ -139,6 +165,9 @@ export class UserList extends React.Component<UserListProps, UserListState> {
     render() {
         let self = this;
         const { t } : any = this.props;
+        const roleListDOM = this.roleList.map((role) =>
+        <option key={role.id} value={role.label}>{role.nameFr}</option>
+        );
         let userList = this.state.userList.map(user => {
             let deleteButton = self.deleteUser.bind(this, user.id);
             return (
@@ -148,7 +177,7 @@ export class UserList extends React.Component<UserListProps, UserListState> {
                     <td>{user.lastName}</td>
                     <td>{user.email}</td>
                     <td>{user.phone}</td>
-                    <td>{user.role.label}</td>
+                    <td>{user.role.nameFr}</td>
                     <td className="row-actions">
                       <Link to={"/user/edit/" + user.id}><i className="os-icon os-icon-pencil-2"></i></Link>
                       {
@@ -192,7 +221,8 @@ export class UserList extends React.Component<UserListProps, UserListState> {
                               <div className="col-sm-6">
                                 <form className="form-inline justify-content-sm-end">
                                   <input className="form-control form-control-sm rounded bright" placeholder={t('user:searchUser')} type="text" value={this.state.searchValue} onChange={this.search} />
-                                  <input className="form-control form-control-sm rounded bright" placeholder={t('user:filterRole')} type="text" value={this.state.filterValue} onChange={this.filter} />
+                                  {/* <input className="form-control form-control-sm rounded bright" placeholder={t('user:filterRole')} type="text" value={this.state.filterValue} onChange={this.filter} /> */}
+                                  
                                   <select className="form-control form-control-sm rounded bright" onChange={this.handleRowCount}>
                                       <option value="10">10</option>
                                       <option value="25">25</option>
@@ -208,6 +238,12 @@ export class UserList extends React.Component<UserListProps, UserListState> {
                               <thead>
                                 <tr>
                                   {tableHeader}
+                                  <th>
+                                  <select className="form-control form-control-sm rounded bright" value={this.state.roleValue} onChange={this.filterRole}>
+                                    <option value="">Role</option>
+                                    {roleListDOM}
+                                  </select>
+                                  </th>
                                   <th>{t('user:action')}</th>
                                 </tr>
                               </thead>
