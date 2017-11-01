@@ -2,7 +2,7 @@ var models = require('./../models');
 var sha1 = require('sha1');
 
 /**
- * Get all user
+ * Get all user 
  * @param query
  * @returns {Promise.<Array.<Model>>}
  */
@@ -12,19 +12,17 @@ module.exports.getAll = function(query) {
         queryParams.offset = parseInt(query['offset']);
     if (query['limit'])
         queryParams.limit = parseInt(query['limit']);
-    var sortable = ['deletedAt', 'businessName', 'address', 'zipCode', 'city'];
-    if (sortable.indexOf(query['sort']) > -1)
+    var sortable = ['firstName', 'lastName', 'email', 'phone'];
+    if (sortable.indexOf(query['sort']) > -1) {
         queryParams.order = [
             [query['sort'], query['order'] === 'DESC' ? 'DESC' : 'ASC']
         ];
-    // if (query['search'])
-    //     queryParams.where = {
-    //         'lastName': {
-    //             $like: '%' + query['search'] + '%'
-    //         }
-    //     };
+        if (query['sort'] == "role")
+            queryParams.order = [
+                [models.role, 'label', query['order'] === 'DESC' ? 'DESC' : 'ASC']
+            ];
 
-    else if (query['id'])
+    } else if (query['id'])
         queryParams.where = {
             id: {
                 $eq: query['id']
@@ -41,22 +39,32 @@ module.exports.getAll = function(query) {
         ]
     }]
 
-    if (query['filter'] || query['search'])
+    if (query['roleValue'] || query['search']) {
         queryParams = {
             include: [{
                 model: models.role,
                 as: 'role',
                 where: {
-                    'label': { $like: '%' + query['filter'] + '%' }
+                    'label': { $like: query['roleValue'] }
                 }
             }],
             where: {
                 'lastName': {
                     $like: '%' + query['search'] + '%'
                 }
-            }
+            },
         };
+        if (sortable.indexOf(query['sort']) > -1) {
+            queryParams.order = [
+                [query['sort'], query['order'] === 'DESC' ? 'DESC' : 'ASC']
+            ];
+            if (query['sort'] == "role")
+                queryParams.order = [
+                    [models.role, 'label', query['order'] === 'DESC' ? 'DESC' : 'ASC']
+                ];
 
+        }
+    }
     return models.user.findAll(queryParams);
 };
 /**
@@ -250,4 +258,5 @@ module.exports.delete = function(id) {
             id: id
         }
     });
+}
 }
