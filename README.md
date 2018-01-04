@@ -12,10 +12,6 @@ Node : 6.11.0 ( LTS)
 
 My SQL 5.7
 
-### Clone
-
-```
-git clone git@git.thecodingmachine.com:tcm-projects/ovatio.git
 ```
 
 ### Npm
